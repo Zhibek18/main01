@@ -1,4 +1,4 @@
-package maintask02;
+package main01;
 
 public class Order{
 	private static int orderCount = 10000;

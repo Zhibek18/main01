@@ -1,4 +1,4 @@
-package maintask02;
+package main01;
 import java.util.Scanner;
 
 public class Runner{
@@ -30,7 +30,7 @@ public class Runner{
 		int n;
 		System.out.println("Please choose name for your pizza:");
 		name = scan.next();
-		System.out.println("Calsone? Type yes or no");
+		System.out.println("Do you want Calsone pizza? Type yes or no");
 		s = scan.next();
 		while ((!s.equalsIgnoreCase("yes"))&&(!s.equalsIgnoreCase("no"))){
 			System.out.println("Do you want Calsone pizza? Type yes or no");
@@ -100,6 +100,9 @@ public class Runner{
 						else{
 							System.out.println("Please type the name of pizza you want to remove");
 							newOrder.deletePizza(scan.next());
+							System.out.println(newOrder);
+							System.out.println("Please check your order. If everything is right type <ok>. To remove pizza from your order type <remove>");
+							s = scan.next();
 						}
 					}
 					System.out.println(newOrder);
