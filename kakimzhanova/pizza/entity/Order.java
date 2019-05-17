@@ -8,12 +8,10 @@ public class Order{
 	private final int orderNumber;
 	private final int customerNumber;
 	private String customerName;
-
 	private int pizzaArraySize = 0;
-	
 	private Pizza pizzaArray[];
-	
-	String report = "Order number: ";
+	private String report = "Order number: ";
+
 	public Order(Client client){
 		customerName = client.getClientName();
 		orderNumber = orderCount++;
@@ -42,7 +40,7 @@ public class Order{
 		private int count;
 		private int numberOfIngredients = 0;
 		
-		private final int MAX_NUMBER_OF_INGREDIENTS = 7;
+		private final static int MAX_NUMBER_OF_INGREDIENTS = 7;
 		
 		public Pizza (String name, boolean calzone, int number){
 			if (NameValidator.validatePizzaName(name)){
@@ -126,7 +124,6 @@ public class Order{
 	public void deletePizza(String name){
 		for (int i = 0; i < pizzaArraySize; i++){
 			if (pizzaArray[i].getPizzaName().equals(name)){
-				
 				int j = i;
 				while (pizzaArray[j]!=null){
 					pizzaArray[j]=pizzaArray[j+1];
