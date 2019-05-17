@@ -5,8 +5,8 @@ public class Runner2{
 		Client client = new Client(1111, "Alisa");
 		Order order = new Order(client);
 		Order.Pizza pizza = order.new Pizza("M", true, 1);
-		pizza.addIngredient("Tomato Paste");
-		pizza.addIngredient("Cheese");
+		pizza.addIngredient(Ingredient.TOMATO_PASTE);
+		pizza.addIngredient(Ingredient.CHEESE);
 		order.addPizza(pizza);
 		System.out.println(order);
 	}	

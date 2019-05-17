@@ -15,20 +15,6 @@ public class Order{
 	
 	private double totalSum = 0;
 	
-	public static Ingredient[] allowedIngredients = new Ingredient[8];
-	static{
-		
-		allowedIngredients[0]= new Ingredient("Tomato Paste", 1);
-		allowedIngredients[1]= new Ingredient("Cheese", 1);
-		allowedIngredients[2]= new Ingredient("Salami", 1.5);
-		allowedIngredients[3]= new Ingredient("Bacon", 1.2);
-		allowedIngredients[4]= new Ingredient("Garlic", 0.3);
-		allowedIngredients[5]= new Ingredient("Corn", 0.7);
-		allowedIngredients[6]= new Ingredient("Pepperoni", 0.6);
-		allowedIngredients[7]= new Ingredient("Olives", 0.5);
-		
-	}
-	
 	public Order(Client client){
 		customerName = client.getClientName();
 		orderCount++;
@@ -68,12 +54,12 @@ public class Order{
 			count = number;
 			numberOfPizzas+=number;
 			if (calzone){
-				ingredients[0] = new Ingredient("Pizza Base(Calsone)", 1.5);
+				ingredients[0] = Ingredient.PIZZA_BASE_CALSONE;
 				cost += 1.5;
 				numberOfIngredients++;
 			}
 			else{
-				ingredients[0] = new Ingredient("Pizza Base(Default)", 1);
+				ingredients[0] = Ingredient.PIZZA_BASE_DEFAULT;
 				cost += 1;
 				numberOfIngredients++;	
 			}
@@ -114,8 +100,8 @@ public class Order{
 			count = newNumber;
 			
 		}
-		public void addIngredient(String name){
-			
+		public void addIngredient(Ingredient ingredient){
+			String name = ingredient.getName();
 			if (numberOfIngredients-1==MAX_NUMBER_OF_INGREDIENTS){
 				System.out.println("You cannot add more than "+ MAX_NUMBER_OF_INGREDIENTS + " ingredients");
 				return;
@@ -126,15 +112,14 @@ public class Order{
 					return;
 				}
 			}
-			for (Ingredient ing: allowedIngredients){
-				if (ing.getName().equals(name)){
-					ingredients[numberOfIngredients] = new Ingredient(name, ing.getPrice());
-					numberOfIngredients++;
-					cost += ing.getPrice();
-					System.out.println(name + " has been added");		
-					return;
-				}
-			}
+
+			ingredients[numberOfIngredients] = ingredient;
+			numberOfIngredients++;
+			cost += ingredient.getPrice();
+			System.out.println(name + " has been added");		
+			return;
+	
+			
 			
 		}
 	}
