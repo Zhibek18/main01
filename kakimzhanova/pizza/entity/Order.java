@@ -1,4 +1,4 @@
-package main01;
+package main01.kakimzhanova.pizza.entity;
 
 public class Order{
 	private static int orderCount = 10000;
@@ -29,12 +29,12 @@ public class Order{
 		
 	}
 	
-	public Order(String name, int cusNum){
-		customerName = name;
+	public Order(Client client){
+		customerName = client.getClientName();
 		orderCount++;
 		//customerCount++;
 		orderNumber = orderCount;
-		customerNumber = cusNum;
+		customerNumber = client.getClientId();
 		pizzaArray = new Pizza[MAX_NUMBER_OF_PIZZAS];
 	}
 	
@@ -112,12 +112,8 @@ public class Order{
 			count = newNumber;
 			
 		}
-		public void addIngredient(int k){
-			if ((k > allowedIngredients.length)||(k <= 0)){
-				System.out.println("Wrong number of ingredient " + k + " Please check again");
-				return;
-			}
-			String name = allowedIngredients[k-1].getName();
+		public void addIngredient(String name){
+			
 			if (numberOfIngredients-1==MAX_NUMBER_OF_INGREDIENTS){
 				System.out.println("You cannot add more than "+ MAX_NUMBER_OF_INGREDIENTS + " ingredients");
 				return;
@@ -133,7 +129,7 @@ public class Order{
 					ingredients[numberOfIngredients] = new Ingredient(name, ing.getPrice());
 					numberOfIngredients++;
 					cost += ing.getPrice();
-					System.out.println(name + " has been added cost = " + cost);		
+					System.out.println(name + " has been added");		
 					return;
 				}
 			}

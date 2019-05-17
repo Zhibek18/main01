@@ -1,4 +1,5 @@
-package main01;
+package main01.kakimzhanova.pizza.entity;
+
 import java.util.Scanner;
 
 public class Runner{

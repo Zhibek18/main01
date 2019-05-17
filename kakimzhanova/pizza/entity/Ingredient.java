@@ -1,4 +1,4 @@
-package main01;
+package main01.kakimzhanova.pizza.entity;
 
 public class Ingredient{
 	 String ingredientName;
