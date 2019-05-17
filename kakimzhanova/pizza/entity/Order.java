@@ -1,6 +1,6 @@
 package main01.kakimzhanova.pizza.entity;
 import main01.kakimzhanova.pizza.valid.NameValidator;
-
+import main01.kakimzhanova.pizza.action.*;
 public class Order{
 	public static final int MAX_NUMBER_OF_PIZZAS = 10;
 	private static int orderCount = 10000;
@@ -13,12 +13,9 @@ public class Order{
 	private Pizza pizzaArray[];
 
 	
-	private double totalSum = 0;
-	
 	public Order(Client client){
 		customerName = client.getClientName();
 		orderCount++;
-		//customerCount++;
 		orderNumber = orderCount;
 		customerNumber = client.getClientId();
 		pizzaArray = new Pizza[MAX_NUMBER_OF_PIZZAS];
@@ -33,13 +30,19 @@ public class Order{
 	public int getNumberOfPizzas(){
 		return numberOfPizzas;
 	}
+	public int getPizzaArraySize(){
+		return pizzaArraySize;
+	}
+	public Pizza[] getPizzaArray(){
+		return pizzaArray;
+	}
+
 	public class Pizza{
 		private String pizzaName;
 		private Ingredient ingredients[];
 		private int count;
 		private int numberOfIngredients = 0;
-		private double cost;
-
+		
 		private final int MAX_NUMBER_OF_INGREDIENTS = 7;
 		
 		public Pizza (String name, boolean calzone, int number){
@@ -49,24 +52,25 @@ public class Order{
 			else{
 				pizzaName = customerName +"_"+ (pizzaArraySize + 1);
 			}
-			
 			ingredients = new Ingredient[MAX_NUMBER_OF_INGREDIENTS];
 			count = number;
 			numberOfPizzas+=number;
 			if (calzone){
 				ingredients[0] = Ingredient.PIZZA_BASE_CALSONE;
-				cost += 1.5;
 				numberOfIngredients++;
 			}
 			else{
 				ingredients[0] = Ingredient.PIZZA_BASE_DEFAULT;
-				cost += 1;
 				numberOfIngredients++;	
 			}
 
 		}
-		public double getCost(){
-			return cost;
+		public int getNumberOfIngredients(){
+			return numberOfIngredients;
+		}
+		
+		public Ingredient[] getIngredients(){
+			return ingredients;
 		}
 		public int getCount(){
 			return count;
@@ -87,9 +91,8 @@ public class Order{
 			for (int i = 0; i < numberOfIngredients; i++){
 				s += String.format("%-24s",ingredients[i].getName())+ String.format("%.2f",ingredients[i].getPrice())+" €\n";
 			}
-			s += border+"Total:"+String.format("%22.2f",cost) +" €\n";
+			s += border+"Total:"+String.format("%22.2f",PizzaAction.calculatePizzaCost(this)) +" €\n";
 			s += "Count:"+ String.format("%24d",count) + "\n" + border;
-
 			return s;
 		}
 		public String getPizzaName(){
@@ -98,7 +101,6 @@ public class Order{
 		public void editNumber(int newNumber){
 			numberOfPizzas-=count - newNumber;
 			count = newNumber;
-			
 		}
 		public void addIngredient(Ingredient ingredient){
 			String name = ingredient.getName();
@@ -112,27 +114,22 @@ public class Order{
 					return;
 				}
 			}
-
 			ingredients[numberOfIngredients] = ingredient;
 			numberOfIngredients++;
-			cost += ingredient.getPrice();
+			
 			System.out.println(name + " has been added");		
 			return;
-	
-			
-			
 		}
 	}
 	public void addPizza(Pizza pizza){
 		pizzaArray[pizzaArraySize] = pizza;
 		pizzaArraySize++;
-		totalSum += pizza.getCost()*pizza.getCount();
+		
 	}
 	public void deletePizza(String name){
 		for (int i = 0; i < pizzaArraySize; i++){
 			if (pizzaArray[i].getPizzaName().equals(name)){
 				numberOfPizzas-=pizzaArray[i].getCount();
-				totalSum -= pizzaArray[i].getCost()*pizzaArray[i].getCount();
 				int j = i;
 				while (pizzaArray[j]!=null){
 					pizzaArray[j]=pizzaArray[j+1];
@@ -144,22 +141,6 @@ public class Order{
 		}
 		System.out.println("Couldn't find pizza with name "+name+". Please try again");
 	}
-	public void changePizzaArraySize(String name, int newNumber){
-		if (newNumber == 0){
-			deletePizza(name);
-		}
-		else{
-			for (int i = 0; i < pizzaArraySize; i++){
-				if (pizzaArray[i].getPizzaName().equals(name)){
-					totalSum -= pizzaArray[i].getCost()*(pizzaArray[i].getCount() - newNumber);
-					pizzaArray[i].editNumber(newNumber);
-
-					return;
-				}
-			}
-			System.out.println("Couldn't find pizza with name "+name+". Please try again");
-		}
-	}
 	public String toString(){
 		
 		String outBorder = "******************************\n";
@@ -170,7 +151,7 @@ public class Order{
 			s += pizzaArray[i];
 			
 		}
-		s += "Total sum:" + String.format("%18.2f",totalSum) + " €\n";
+		s += "Total sum:" + String.format("%18.2f",OrderAction.calculateOrderCost(this)) + " €\n";
 		s += outBorder;
 		return s;
 	}
