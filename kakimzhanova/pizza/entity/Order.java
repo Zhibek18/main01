@@ -1,20 +1,20 @@
 package main01.kakimzhanova.pizza.entity;
+import main01.kakimzhanova.pizza.valid.NameValidator;
 
 public class Order{
+	public static final int MAX_NUMBER_OF_PIZZAS = 10;
 	private static int orderCount = 10000;
-	//private static int customerCount;
-
 	private final int orderNumber;
 	private final int customerNumber;
-
 	private String customerName;
+
 	private int pizzaArraySize = 0;
 	private int numberOfPizzas = 0;
 	private Pizza pizzaArray[];
 
-	public static final int MAX_NUMBER_OF_PIZZAS = 10;
-
+	
 	private double totalSum = 0;
+	
 	public static Ingredient[] allowedIngredients = new Ingredient[8];
 	static{
 		
@@ -57,11 +57,13 @@ public class Order{
 		private final int MAX_NUMBER_OF_INGREDIENTS = 7;
 		
 		public Pizza (String name, boolean calzone, int number){
-			int l = name.length();
-			if ((l < 4)||(l > 20)){
-				name = customerName +"_"+ (pizzaArraySize + 1);
+			if (NameValidator.validatePizzaName(name)){
+				pizzaName = name;	
 			}
-			pizzaName = name;
+			else{
+				pizzaName = customerName +"_"+ (pizzaArraySize + 1);
+			}
+			
 			ingredients = new Ingredient[MAX_NUMBER_OF_INGREDIENTS];
 			count = number;
 			numberOfPizzas+=number;
