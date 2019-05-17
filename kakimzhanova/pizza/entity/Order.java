@@ -1,6 +1,7 @@
 package main01.kakimzhanova.pizza.entity;
 import main01.kakimzhanova.pizza.valid.NameValidator;
 import main01.kakimzhanova.pizza.action.*;
+import main01.kakimzhanova.pizza.report.PizzaReport;
 public class Order{
 	public static final int MAX_NUMBER_OF_PIZZAS = 10;
 	private static int orderCount = 10000;
@@ -9,26 +10,22 @@ public class Order{
 	private String customerName;
 
 	private int pizzaArraySize = 0;
-	private int numberOfPizzas = 0;
-	private Pizza pizzaArray[];
-
 	
+	private Pizza pizzaArray[];
+	
+	String report = "Order number: ";
 	public Order(Client client){
 		customerName = client.getClientName();
-		orderCount++;
-		orderNumber = orderCount;
+		orderNumber = orderCount++;
+		report += orderNumber + "\n";
 		customerNumber = client.getClientId();
 		pizzaArray = new Pizza[MAX_NUMBER_OF_PIZZAS];
 	}
-	
 	public int getCustomerNumber(){
 		return customerNumber;
 	}
 	public int getOrderNumber(){
 		return orderNumber;
-	}
-	public int getNumberOfPizzas(){
-		return numberOfPizzas;
 	}
 	public int getPizzaArraySize(){
 		return pizzaArraySize;
@@ -36,7 +33,9 @@ public class Order{
 	public Pizza[] getPizzaArray(){
 		return pizzaArray;
 	}
-
+	public String getOrderReport(){
+		return report;
+	}
 	public class Pizza{
 		private String pizzaName;
 		private Ingredient ingredients[];
@@ -54,7 +53,7 @@ public class Order{
 			}
 			ingredients = new Ingredient[MAX_NUMBER_OF_INGREDIENTS];
 			count = number;
-			numberOfPizzas+=number;
+			
 			if (calzone){
 				ingredients[0] = Ingredient.PIZZA_BASE_CALSONE;
 				numberOfIngredients++;
@@ -63,30 +62,29 @@ public class Order{
 				ingredients[0] = Ingredient.PIZZA_BASE_DEFAULT;
 				numberOfIngredients++;	
 			}
-
+			reportPizza();
 		}
 		public int getNumberOfIngredients(){
 			return numberOfIngredients;
 		}
-		
 		public Ingredient[] getIngredients(){
 			return ingredients;
 		}
 		public int getCount(){
 			return count;
 		}
-		public void printPizza(){
-			String s;
-			s = "["+ orderNumber + ":" 
+		public String getPizzaName(){
+			return pizzaName;
+		}
+		public void reportPizza(){
+			report += "["+ orderNumber + ":" 
 				+ customerNumber + ":" 
 				+ pizzaName + ":"
-				+count+"]";
-			System.out.println(s);
+				+count+"]" + "\n";
 		}
 		public String toString(){
 			String s;
 			String border = "-----------------------------\n";
-
 			s = "Name:"+pizzaName+"\n"+ border;
 			for (int i = 0; i < numberOfIngredients; i++){
 				s += String.format("%-24s",ingredients[i].getName())+ String.format("%.2f",ingredients[i].getPrice())+" €\n";
@@ -95,41 +93,40 @@ public class Order{
 			s += "Count:"+ String.format("%24d",count) + "\n" + border;
 			return s;
 		}
-		public String getPizzaName(){
-			return pizzaName;
-		}
 		public void editNumber(int newNumber){
-			numberOfPizzas-=count - newNumber;
+			
 			count = newNumber;
 		}
 		public void addIngredient(Ingredient ingredient){
 			String name = ingredient.getName();
 			if (numberOfIngredients-1==MAX_NUMBER_OF_INGREDIENTS){
-				System.out.println("You cannot add more than "+ MAX_NUMBER_OF_INGREDIENTS + " ingredients");
+				report += "You cannot add more than "+ MAX_NUMBER_OF_INGREDIENTS + " ingredients\n";
 				return;
 			}
 			for (int i =0; i < numberOfIngredients; i++){
 				if (ingredients[i].getName().equals(name)){
-					System.out.println("You have already added "+name);
+					report += "You have already added "+name+"\n";
 					return;
 				}
 			}
 			ingredients[numberOfIngredients] = ingredient;
 			numberOfIngredients++;
-			
-			System.out.println(name + " has been added");		
+			report += name + " has been added\n";
 			return;
 		}
 	}
 	public void addPizza(Pizza pizza){
+		if (OrderAction.calculatePizzaCount(this) + pizza.getCount() > MAX_NUMBER_OF_PIZZAS){
+			report += "You cannot order more than "+MAX_NUMBER_OF_PIZZAS+" pizzas\n";
+			return;
+		}
 		pizzaArray[pizzaArraySize] = pizza;
 		pizzaArraySize++;
-		
 	}
 	public void deletePizza(String name){
 		for (int i = 0; i < pizzaArraySize; i++){
 			if (pizzaArray[i].getPizzaName().equals(name)){
-				numberOfPizzas-=pizzaArray[i].getCount();
+				
 				int j = i;
 				while (pizzaArray[j]!=null){
 					pizzaArray[j]=pizzaArray[j+1];
@@ -139,22 +136,18 @@ public class Order{
 				return;
 			}
 		}
-		System.out.println("Couldn't find pizza with name "+name+". Please try again");
+		report += "Couldn't find pizza with name "+name+". Please try again\n";
 	}
 	public String toString(){
-		
 		String outBorder = "******************************\n";
 		String s = outBorder +
 					"Order:"+orderNumber+"\n" +
 					"Customer:"+customerNumber+"\n";
 		for (int i = 0; i < pizzaArraySize; i++){
 			s += pizzaArray[i];
-			
 		}
 		s += "Total sum:" + String.format("%18.2f",OrderAction.calculateOrderCost(this)) + " €\n";
 		s += outBorder;
 		return s;
 	}
-
-
 }
