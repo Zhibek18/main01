@@ -18,6 +18,7 @@ public class Runner{
 		pizzaPep.addIngredient(Ingredient.PEPPERONI);
 		pizzaPep.addIngredient(Ingredient.OLIVES);
 		firstOrder.addPizza(pizzaPep);
+		firstOrder.editPizzaCount("PepperoniOro", 9);
 		System.out.println(firstOrder);
 
 		Client secondClient = new Client(4372, "Mark");

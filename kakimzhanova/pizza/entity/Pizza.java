@@ -6,7 +6,6 @@ import main01.kakimzhanova.pizza.valid.NameValidator;
 import main01.kakimzhanova.pizza.action.*;
 import main01.kakimzhanova.pizza.report.PizzaReport;
 
-
 public class Pizza{
 		private int orderId;
 		private int clientId;
@@ -55,6 +54,10 @@ public class Pizza{
 				+ pizzaName + ":"
 				+count+"]" + "\n";
 		}
+
+		public void editCount(int newNumber){
+			count = newNumber;
+		}
 		public String toString(){
 			String s;
 			String border = "-----------------------------\n";
@@ -66,9 +69,7 @@ public class Pizza{
 			s += "Count:"+ String.format("%24d",count) + "\n" + border;
 			return s;
 		}
-		public void editNumber(int newNumber){
-			count = newNumber;
-		}
+		
 		public void addIngredient(Ingredient ingredient){
 			String name = ingredient.getName();
 			if (ingredients.length - 1 == MAX_NUMBER_OF_INGREDIENTS){

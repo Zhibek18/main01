@@ -12,7 +12,6 @@ public class Order{
 	private final int orderId;
 	private final int clientId;
 	private String clientName;
-	//private int pizzaArraySize = 0;
 	private Pizza pizzaArray[];
 	private String report = "Order number: ";
 	private LocalTime localTime;
@@ -23,7 +22,6 @@ public class Order{
 		orderId = orderCount++;
 		report += orderId + "\n";
 		clientId = client.getClientId();
-		//pizzaArray = new Pizza[MAX_NUMBER_OF_PIZZAS];
 		localTime = LocalTime.now();
 	}
 	public int getclientId(){
@@ -86,6 +84,19 @@ public class Order{
 		}
 		pizzaArray = newPizzas;
 		
+	}
+	public void editPizzaCount(String pizzaName, int newCount){
+		for (Pizza pizza : pizzaArray){
+			if (pizza.getPizzaName().equals(pizzaName)){
+				if (OrderAction.calculatePizzaCount(this) - pizza.getCount() + newCount > MAX_NUMBER_OF_PIZZAS){
+					report += "You cannot order more than "+MAX_NUMBER_OF_PIZZAS+" pizzas\n";
+					return;
+				}
+				pizza.editCount(newCount);
+				return;
+			}
+		}
+		report += "Couldn't find pizza with name "+pizzaName+". Please try again\n";
 	}
 	public String toString(){
 
