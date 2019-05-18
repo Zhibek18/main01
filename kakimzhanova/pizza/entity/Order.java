@@ -1,7 +1,10 @@
 package main01.kakimzhanova.pizza.entity;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import main01.kakimzhanova.pizza.valid.NameValidator;
 import main01.kakimzhanova.pizza.action.*;
 import main01.kakimzhanova.pizza.report.PizzaReport;
+
 public class Order{
 	public static final int MAX_NUMBER_OF_PIZZAS = 10;
 	private static int orderCount = 10000;
@@ -11,6 +14,8 @@ public class Order{
 	private int pizzaArraySize = 0;
 	private Pizza pizzaArray[];
 	private String report = "Order number: ";
+	private LocalTime localTime;
+	private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
 	public Order(Client client){
 		customerName = client.getClientName();
@@ -18,6 +23,7 @@ public class Order{
 		report += orderNumber + "\n";
 		customerNumber = client.getClientId();
 		pizzaArray = new Pizza[MAX_NUMBER_OF_PIZZAS];
+		localTime = LocalTime.now();
 	}
 	public int getCustomerNumber(){
 		return customerNumber;
@@ -92,7 +98,6 @@ public class Order{
 			return s;
 		}
 		public void editNumber(int newNumber){
-			
 			count = newNumber;
 		}
 		public void addIngredient(Ingredient ingredient){
@@ -138,6 +143,7 @@ public class Order{
 	public String toString(){
 		String outBorder = "******************************\n";
 		String s = outBorder +
+					"Time: " + localTime.format(timeFormatter)+"\n" +
 					"Order:"+orderNumber+"\n" +
 					"Customer:"+customerNumber+"\n";
 		for (int i = 0; i < pizzaArraySize; i++){
