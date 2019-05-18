@@ -1,5 +1,6 @@
 package main01.kakimzhanova.pizza.entity;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.time.format.DateTimeFormatter;
 import main01.kakimzhanova.pizza.valid.NameValidator;
 import main01.kakimzhanova.pizza.action.*;
@@ -11,7 +12,7 @@ public class Order{
 	private final int orderId;
 	private final int clientId;
 	private String clientName;
-	private int pizzaArraySize = 0;
+	//private int pizzaArraySize = 0;
 	private Pizza pizzaArray[];
 	private String report = "Order number: ";
 	private LocalTime localTime;
@@ -22,7 +23,7 @@ public class Order{
 		orderId = orderCount++;
 		report += orderId + "\n";
 		clientId = client.getClientId();
-		pizzaArray = new Pizza[MAX_NUMBER_OF_PIZZAS];
+		//pizzaArray = new Pizza[MAX_NUMBER_OF_PIZZAS];
 		localTime = LocalTime.now();
 	}
 	public int getclientId(){
@@ -32,7 +33,12 @@ public class Order{
 		return orderId;
 	}
 	public int getPizzaArraySize(){
-		return pizzaArraySize;
+		if (pizzaArray == null){
+			return 0;
+		}
+		else{
+			return pizzaArray.length;
+		}
 	}
 	public Pizza[] getPizzaArray(){
 		return pizzaArray;
@@ -47,36 +53,52 @@ public class Order{
 			return;
 		}
 		if (!NameValidator.validatePizzaName(pizza.getPizzaName())){
-			pizza.editPizzaName(clientName +"_"+ (pizzaArraySize + 1));
+			pizza.editPizzaName(clientName +"_"+ (pizzaArray.length + 1));
 		}
 		pizza.setOrderId(orderId);
 		pizza.setClientId(clientId);
-		pizzaArray[pizzaArraySize] = pizza;
+		if (pizzaArray != null){
+			Pizza[] newPizzas = Arrays.copyOf(pizzaArray, pizzaArray.length + 1);
+			newPizzas[pizzaArray.length] = pizza;	
+			pizzaArray = newPizzas;
+		}
+		else{
+			pizzaArray = new Pizza[1];
+			pizzaArray[0] = pizza;
+		}
+		
 		report += pizza.getReport();
-		pizzaArraySize++;
+		
 	}
 	public void deletePizza(String name){
-		for (int i = 0; i < pizzaArraySize; i++){
-			if (pizzaArray[i].getPizzaName().equals(name)){
-				int j = i;
-				while (pizzaArray[j]!=null){
-					pizzaArray[j]=pizzaArray[j+1];
-					j++;
+		Pizza[] newPizzas = new Pizza[pizzaArray.length - 1];
+		int j = 0;
+		try{
+			for (Pizza pizza: pizzaArray){
+				if (!pizza.getPizzaName().equals(name)){
+					newPizzas[j++] = pizza;
 				}
-				pizzaArraySize--;
-				return;
+				
 			}
+		}catch(ArrayIndexOutOfBoundsException e){
+			report += "Couldn't find pizza with name "+name+". Please try again\n";
+			return;		
 		}
-		report += "Couldn't find pizza with name "+name+". Please try again\n";
+		pizzaArray = newPizzas;
+		
 	}
 	public String toString(){
+
 		String outBorder = "******************************\n";
 		String s = outBorder +
 					"Time: " + localTime.format(timeFormatter)+"\n" +
 					"Order: "+orderId+"\n" +
 					"Client: "+clientId+"\n";
-		for (int i = 0; i < pizzaArraySize; i++){
-			s += pizzaArray[i];
+		if (pizzaArray == null){
+			return s+"Empty order\n" + outBorder;
+		}
+		for (Pizza pizza: pizzaArray){
+			s += pizza;
 		}
 		s += "Total sum:" + String.format("%18.2f",OrderAction.calculateOrderCost(this)) + " €\n";
 		s += outBorder;

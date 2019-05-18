@@ -5,8 +5,8 @@ public class OrderAction{
 	public static double calculateOrderCost(Order order){
 		double cost = 0;
 		Pizza[] pizzaArray = order.getPizzaArray();
-		for (int i = 0; i < order.getPizzaArraySize(); i++){
-			cost += PizzaAction.calculatePizzaCost(pizzaArray[i]) * pizzaArray[i].getCount();
+		for (Pizza pizza: pizzaArray){
+			cost += PizzaAction.calculatePizzaCost(pizza) * pizza.getCount();
 		}
 		return cost;
 	}

@@ -4,8 +4,8 @@ public class PizzaAction{
 	public static double calculatePizzaCost(Pizza pizza){
 		double cost = 0;
 		Ingredient[] ingredients = pizza.getIngredients();
-		for (int i = 0; i < pizza.getNumberOfIngredients(); i++){
-			cost += ingredients[i].getPrice();	
+		for (Ingredient ing: ingredients){
+			cost += ing.getPrice();	
 		}
 		return cost;
 	}
